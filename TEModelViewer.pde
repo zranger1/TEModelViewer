@@ -1,6 +1,16 @@
+
+import peasy.PeasyCam;
 import me.walkerknapp.devolay.*;
 import java.nio.ByteBuffer;
 import static me.walkerknapp.devolay.DevolayReceiver.RECEIVE_BANDWIDTH_HIGHEST;
+
+
+// Note: NDI source must be running before starting this sketch.
+//
+// Drag w/mouse to move camera,
+// scroll wheel zooms in/out
+// Double click to reset camera.
+PeasyCam cam;
 
 PShape particles;
 PImage sprite;  
@@ -49,19 +59,21 @@ void findAndConnect() {
     }
 
     // Connect to the first source found
+    // TODO - should probably connect by name.
     println("Connecting to source: " + sources[0].getSourceName());
     ndiIn.connect(sources[0]);
 }
 
 
-
 void setup() {
   // set the window size
   size(1280,800, P3D);
-  // or, to go fullscreen on the default monitor
+  // ...or, to go fullscreen on the default monitor
   // fullScreen(P3D,0);
   frameRate(60);
   blendMode(ADD);
+  
+  cam = new PeasyCam(this, 0,-400,0,2000);
   
   Devolay.loadLibraries();
    
@@ -78,6 +90,7 @@ void setup() {
   
   loadTEModel();
 
+  // for each LED, scale point values down a bit and create a sprite
   for (int n = 0; n < npartTotal; n++) {
     float cx = teModel[2][n] / divisor;
     float cy = teModel[1][n] / divisor; 
@@ -103,10 +116,9 @@ void setup() {
   // artifacts due to the fact that the particles are semi-transparent
   // but not z-sorted.
   hint(DISABLE_DEPTH_MASK);
+  //hint(ENABLE_DEPTH_SORT);
   
-  findAndConnect();
-  
-  
+  findAndConnect(); 
 } 
 
 void draw () {
@@ -122,8 +134,7 @@ void draw () {
     }
   }     
      
-  translate(640,800,-1000);
-  rotateY(PI/4 * sin(frameCount * 0.01));    
+  //translate(640,800,0);
 
   shape(particles); 
   
