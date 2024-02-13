@@ -16,7 +16,7 @@ PShape particles;
 PImage sprite;  
 
 int npartTotal = 80000;
-float partSize = 20;
+float partSize = 14;
 float divisor = 10000;
 LightModel l;
 
@@ -115,8 +115,9 @@ void setup() {
   // Writing to the depth buffer is disabled to avoid rendering
   // artifacts due to the fact that the particles are semi-transparent
   // but not z-sorted.
+  // TODO - hidden surface removal by normal, probably.
   hint(DISABLE_DEPTH_MASK);
-  //hint(ENABLE_DEPTH_SORT);
+
   
   findAndConnect(); 
 } 
@@ -134,7 +135,8 @@ void draw () {
     }
   }     
      
-  //translate(640,800,0);
+  // match Chromatik's default orientation, more-or-less
+  rotateY(PI);
 
   shape(particles); 
   
